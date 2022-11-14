@@ -3,7 +3,7 @@
 # append metadata from movebank 
 # Input: Raw movebank meta and gps-data
 # Output: Matched columns for both df
-append.metadata   <- function(GPS.data,meta.data){
+append_metadata   <- function(GPS.data,meta.data){
   
   # load and install all required packages
   if (!require("data.table")) install.packages("data.table")  
