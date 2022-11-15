@@ -2,7 +2,7 @@
 
 # append metadata from movebank 
 # Input: Raw movebank meta and gps-data
-# Output: Matched columns for both df
+# Output: Df with matched columns from both df
 append_metadata   <- function(GPS.data,meta.data){
   
   # load and install all required packages
@@ -61,8 +61,8 @@ create_polygon <- function(lon, lat, radius){
 }
 
 # check whether GPS-fixes are within a certain polygon (i.e. colony boundaries)
-# Input:   Movebank data and a spatialpointspolygon
-# Output: Adds TRUE/FALSE column to df whether point was in polygon 
+# Input:   Coordinates, or a vectors of coordinates and a spatialpointspolygon
+# Output: Returns TRUE/FALSE values if point was in polygon 
 polygon_check <- function(lon, lat, polygon){
   if (!require("sp")) install.packages("sp") 
   if (!require("rgeos")) install.packages("rgeos") 
@@ -79,7 +79,7 @@ polygon_check <- function(lon, lat, polygon){
 # removes all points until bird left colony for the last time, this function can only be used after using the polygon_check function!
 # ! still need to adapt function to work per cycle instead of per bird!
 remove_colony <- function(GPS_data){
-  warning("READ-FIRST: Removes all points until bird left colony for the last time, this function can only be used after using the polygon_check function! Still need to adapt function to work per cycle instead of per bird!")
+  warning("READ-FIRST: Use function after using the polygon_check function  or make sure the df contains an In_poly boolean column! Still need to adapt function to work per cycle instead of per bird!")
   dummy <- NULL
   for (bird in unique(GPS_data$individual.local.identifier)){ 
     
