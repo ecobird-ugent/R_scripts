@@ -31,7 +31,7 @@ append_metadata   <- function(GPS.data,meta.data){
 # create polygon with certain radius (m)
 # Input: Lon and lat of the point of interest, radius of the polygon to be created
 # Output: A circular Spatialpolygondataframe of certain radius around a GPS-position of interest
-polygon_circle <- function(lon, lat, radius){
+create_polygon <- function(lon, lat, radius){
   
   # load and install all required packages
   if (!require("dplyr")) install.packages("dplyr")  
@@ -99,7 +99,7 @@ remove_colony <- function(GPS_data){
 ### Classify stopover sites
 ### Input = (subsampled )GPS coordinates, an epsilon value, and a minimal amount of points per cluster (cf dbscan)
 ### Output = A df with 3 added columns: Cluster, Cluster ID (unique per bird), and Migratory bout ID (unique per bird)
-clusterandlabel <- function(GPS_data, eps, amount){
+dbcluster_label <- function(GPS_data, eps, amount){
   
   #loop over birds, cluster stopover sites
   clustered_roosts <- NULL
