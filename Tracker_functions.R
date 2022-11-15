@@ -63,19 +63,17 @@ polygon_circle <- function(lon, lat, radius){
 # check whether GPS-fixes are within a certain polygon (i.e. colony boundaries)
 # Input:   Movebank data and a spatialpointspolygon
 # Output: Adds TRUE/FALSE column to df whether point was in polygon 
-polygon_check <- function(GPS_data, polygon){
+polygon_check <- function(lon, lat, polygon){
   if (!require("sp")) install.packages("sp") 
   if (!require("rgeos")) install.packages("rgeos") 
   require(sp)
   require(rgeos)
-  y=GPS_data$location.lat
-  x=GPS_data$location.long
-  points = data.frame(x, y)
+  points = data.frame(lon, lat)
   points   <- SpatialPoints(points)
   proj4string(polygon) <- CRS("EPSG:4326")
   proj4string(points) <- CRS("EPSG:4326")
-  GPS_data$In_poly <- gContains((polygon), points, byid =TRUE)
-  
+  In_poly <- gContains((polygon), points, byid =TRUE)
+  return(In_poly)
 }
 
 # removes all points until bird left colony for the last time, this function can only be used after using the polygon_check function!
@@ -99,16 +97,9 @@ remove_colony <- function(GPS_data){
 }
 
 ### Classify stopover sites
-### Input = (subsampled )GPS data, an epsilon value, and a minimal amount of points per cluster (cf dbscan)
+### Input = (subsampled )GPS coordinates, an epsilon value, and a minimal amount of points per cluster (cf dbscan)
 ### Output = A df with 3 added columns: Cluster, Cluster ID (unique per bird), and Migratory bout ID (unique per bird)
 clusterandlabel <- function(GPS_data, eps, amount){
-  ### cluster data with dbscan
-  y=GPS_data$location.lat
-  x=GPS_data$location.long
-  points = data.frame(x, y)
-  ### check whether epsilon value makes sense
-  dbscan::kNNdistplot(points, k =  amount)
-  abline(h = eps, lty = 2)
   
   #loop over birds, cluster stopover sites
   clustered_roosts <- NULL
