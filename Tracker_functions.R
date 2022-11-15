@@ -143,7 +143,7 @@ dbcluster_label <- function(GPS_data, eps, amount){
 
 ### Subsample data to a certain resolution
 ### Input = A movebank df, the cutoff value for your minutes 
-### Output = A subsapled dataframe where rows got removed until their cumulative time difference almost reaches the cutoff value (cutoff - 1min)
+### Output = A subsampled dataframe where rows got removed until their cumulative time difference almost reaches the cutoff value (cutoff - 1min)
 subsample <- function(movebank_data, minutes){
   
   # load and install all required packages
@@ -174,7 +174,6 @@ subsample <- function(movebank_data, minutes){
 ### Looks up raster values for coordinates
 ### Input = set of coordinates, a .tif file 
 ### Output = Value(s) of rasterlayer corresponding to coordinates
-
 append_rasterlayer <-function(lon, lat, tif_file){
   # load and install all required packages
   if (!require("raster")) install.packages("raster")  
@@ -191,4 +190,19 @@ append_rasterlayer <-function(lon, lat, tif_file){
   return(raster_values)
   
 }
+
+### Calculate minimal distance for each coordinate from df1 to any coordinate from df2
+### input: lon1, lat1 the coordinates for which you want the minimal distance
+### input: lon2, lat2 the coordinates in which to find the minimal distance
+### output: distance to nearest point (in m)
+minimal_distance <- function(lon1, lat1, lon2, lat2){
+  #make coordinate dataframes
+  coords_A <- data.frame(lon = lon1, lat = lat1)
+  coords_B <- data.frame(lon = lon2, lat = lat2)
+  #create distance matrix
+  m1 <- apply(coords_A, 1, function(i)apply(coords_B, 1, function(j)distHaversine(i, j)))
+  #retain smallest value per column
+  min_dist <- apply(m1, 2, min)
+  return(min_dist)}
+
 
