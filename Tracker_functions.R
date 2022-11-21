@@ -196,6 +196,8 @@ append_rasterlayer <-function(lon, lat, tif_file){
 ### input: lon2, lat2 the coordinates in which to find the minimal distance
 ### output: distance to nearest point (in m)
 minimal_distance <- function(lon1, lat1, lon2, lat2){
+  if (!require("geosphere")) install.packages("geosphere") 
+  require("geosphere")
   #make coordinate dataframes
   coords_A <- data.frame(lon = lon1, lat = lat1)
   coords_B <- data.frame(lon = lon2, lat = lat2)
