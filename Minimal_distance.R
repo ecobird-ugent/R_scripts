@@ -10,11 +10,13 @@ source("https://raw.githubusercontent.com/ReinoudAllaert/Gull_tracking/main/Trac
 GPS_data <- read.csv("~Path_to_movebank_data")
 
 # add bird_day
-GPS_data$bird_day <- paste0(GPS_data$date, "_", GPS_data$colour_ring)
+GPS_data$date <- as.Date(GPS_data$timestamp)
+GPS_data$bird_day <- paste0(GPS_data$date, "_", GPS_data$individual.local.identifier)
 
 # empty df
 dist_df <- NULL
-
+count <- 0
+total <- length(unique(GPS_data$bird_day))
 # loop over bird_days, add minimal distance
 for (i in unique(GPS_data$bird_day)) {
   # subset to day of interest
@@ -29,11 +31,15 @@ for (i in unique(GPS_data$bird_day)) {
   if(nrow(day_1) == 0 | nrow(day_2) == 0 ){
     day$mindist <- NA
     dist_df <- rbind(dist_df,day)
+    count <- count + 1
+    print(paste0(count, "/", total))
     # if not, calculate minimal distance
   } else {
     day_1_2 <- rbind(day_1,day_2)
     day$mindist <- minimal_distance(day$location.long, day$location.lat, day_1_2$location.long, day_1_2$location.lat)
     dist_df <- rbind(dist_df,day)
+    count <- count + 1
+    print(paste0(count, "/", total))
   }
   
 }
