@@ -21,12 +21,13 @@ total <- length(unique(GPS_data$bird_day))
 for (i in unique(GPS_data$bird_day)) {
   # subset to day of interest
   day <- GPS_data %>% filter(bird_day == i)
-  date <- as.Date(unique(day$date))
+  bird <- unique(day$individual.local.identifier)
+  date <- unique(day$date)
   date_1 <- date - 1
   date_2 <- date - 2
   # add 2 previous days
-  day_1 <- GPS_data %>% filter(date == date_1)
-  day_2 <- GPS_data %>% filter(date == date_2)
+  day_1 <- GPS_data %>% filter(date == date_1 & individual.local.identifier == bird)
+  day_2 <- GPS_data %>% filter(date == date_2 & individual.local.identifier == bird)
   # check if days are empty, if so: dist = NA
   if(nrow(day_1) == 0 | nrow(day_2) == 0 ){
     day$mindist <- NA
