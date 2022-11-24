@@ -44,4 +44,18 @@ for (i in unique(GPS_data$bird_day)) {
   
 }
 
+GPS_data <- dist_df
+GPS_data$fidelity <- "FALSE"
+GPS_data$fidelity[GPS_data$mindist <= 500] <- "TRUE"
+
+# site fidelity: proportion of points per day within 500m of points from prev 2days
+df<- GPS_data %>%
+  group_by(bird_day) %>%
+  count(bird_day )
+df2<- GPS_data %>%
+  group_by(bird_day) %>%
+  count(fidelity)
+df2 <- subset(df2, fidelity == TRUE)
+df <- merge(x=df,y=df2,by="bird_day")
+df$fidelity_prop <- df$n.y/df$n.x
 
