@@ -60,3 +60,5 @@ df2 <- subset(df2, fidelity == TRUE)
 df <- merge(x=df,y=df2,by="bird_day")
 df$fidelity_prop <- df$n.y/df$n.x
 
+df <- df %>% separate(bird_day, c("date", "bird"), sep = "_")
+df$date <- as.Date(df$date)
