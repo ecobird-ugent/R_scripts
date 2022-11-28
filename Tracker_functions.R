@@ -208,3 +208,25 @@ minimal_distance <- function(lon1, lat1, lon2, lat2){
   return(min_dist)}
 
 
+
+### Calculate step length between each GPS fix and the subsequent fix
+### input: movebank data
+### output: df with added column step_length
+step_length <- function(movebank_data){
+  # Function which calculates distance between fix and next fix
+  FUN <- function(bird){
+    p <- cbind(bird$location.long, bird$location.lat)
+    bird$step_length <- c(NA, distHaversine(head(p, -1), tail(p, -1)))
+    return(bird)
+  }
+  # split df per ID
+  movebank_data <- split(movebank_data, movebank_data$individual.local.identifier) 
+  # remove birds with 1 position
+  movebank_data <- movebank_data[sapply(movebank_data, nrow) > 1]
+  # apply over list elements, combine again
+  movebank_data <- lapply(movebank_data, FUN)
+  movebank_data <- bind_rows(movebank_data, .id = "column_label")
+  
+}
+
+
