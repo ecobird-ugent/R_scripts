@@ -164,7 +164,7 @@ subsample <- function(movebank_data, minutes){
   movebank_data$delta2 <- as.numeric(movebank_data$diff_sec)/60  
   
   movebank_data <- setDT(movebank_data)[, .SD[.N], by = MESS::cumsumbinning(delta2, minutes - 1, cutwhenpassed = TRUE)]
-  
+  movebank_data[1] <- NULL 
   
   
   
