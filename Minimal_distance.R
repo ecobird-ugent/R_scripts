@@ -1,4 +1,5 @@
-## Calculate the minimal distance between points from day X and any point from X-1 and X-2
+## Calculate the minimal distance between points from a certain day and all the previous days. 
+## Can be used to caculate distance between patches.
 ## Input: movebank data
 ## output: added column with minimal distance to any of the points in the previous two days
 
