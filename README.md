@@ -9,6 +9,7 @@ Raw data can be downloaded from movebank, for example: https://www.movebank.org/
 How to use: 
 
 Source the raw file to use the functions in R
+
 ```https://raw.githubusercontent.com/cobe-lab/R_scripts/main/Tracker_functions.R```
 
 ### Minimal_distence
