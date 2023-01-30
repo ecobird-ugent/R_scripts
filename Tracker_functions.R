@@ -10,7 +10,9 @@ append_metadata   <- function(GPS.data,meta.data){
   if (!require("bit64")) install.packages("bit64") 
   require(data.table)
   require(bit64)
-  
+  # remove dashes from colnames
+  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
+  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
   # convert input to data.table
   GPS.data               <- data.table(GPS.data)
   meta.data              <- data.table(meta.data)
