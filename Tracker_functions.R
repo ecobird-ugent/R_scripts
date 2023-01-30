@@ -23,7 +23,7 @@ append_metadata   <- function(GPS.data,meta.data){
   GPS.data$colour_ring   <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.ring.id"]
   GPS.data$sex           <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.sex"]
   GPS.data$tag_location  <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deployment.comments"]
-  GPS.data$deploy_end  <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.off.date"]
+  GPS.data$deploy_end    <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.off.date"]
   GPS.data$deploy_start  <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.on.date"]
   return(GPS.data)
 }
@@ -40,24 +40,22 @@ create_polygon <- function(lon, lat, radius){
   require(sf)
   
   points <- data.frame(
-    long = lon,
-    lat = lat)
+     long = lon,
+     lat  = lat)
   
   points <- points %>%
     # Transform data.frame in Simple Feature object
-    st_as_sf(coords = c('lat', 'long'), dim = "XY") %>% 
+    st_as_sf(coords = c("lat", "long"), dim = "XY") %>% 
     # Determine the coordinate system
     st_set_crs("EPSG:4326") %>%
     # Tranform geographical coordinates to cartesian
     # so we can choose the size of the buffer in meters
-    st_transform( crs = 27700)  %>%
+    st_transform(crs = 27700)  %>%
     # Calculate buffer
     st_buffer(dist = radius) %>%
     # Return to WGS 84 geographical coordinate system to export in KML
-    st_transform( crs = 4326)
+    st_transform(crs = 4326)
   points <- as_Spatial(points)
-  
-  
 }
 
 # check whether GPS-fixes are within a certain polygon (i.e. colony boundaries)
@@ -68,8 +66,8 @@ polygon_check <- function(lon, lat, polygon){
   if (!require("rgeos")) install.packages("rgeos") 
   require(sp)
   require(rgeos)
-  points = data.frame(lon, lat)
-  points   <- SpatialPoints(points)
+  points <- data.frame(lon, lat)
+  points <- SpatialPoints(points)
   proj4string(polygon) <- CRS("EPSG:4326")
   proj4string(points) <- CRS("EPSG:4326")
   In_poly <- gContains((polygon), points, byid =TRUE)
@@ -79,35 +77,31 @@ polygon_check <- function(lon, lat, polygon){
 # removes all points until bird left colony for the last time, this function can only be used after using the polygon_check function!
 # ! still need to adapt function to work per cycle instead of per bird!
 remove_colony <- function(GPS_data){
-  warning("READ-FIRST: Use function after using the polygon_check function  or make sure the df contains an In_poly boolean column! Still need to adapt function to work per cycle instead of per bird!")
+  warning("READ-FIRST: Use function after using the polygon_check function or make sure the df contains an In_poly boolean column! Still need to adapt function to work per cycle instead of per bird!")
   dummy <- NULL
   for (bird in unique(GPS_data$individual.local.identifier)){ 
-    
     ind_bird <- GPS_data %>% filter(individual.local.identifier == bird)
-    
-    t <-(as.data.frame(t(tapply(seq_along(ind_bird$In_poly), ind_bird$In_poly, max))))
-    t <-t$`TRUE`
-    if (!is.null(t)) {
+    t <- (as.data.frame(t(tapply(seq_along(ind_bird$In_poly), ind_bird$In_poly, max))))
+    t <- t$`TRUE`
+    if(!is.null(t)) {
       ind_bird <- ind_bird[-c(1:t), ]
       dummy <- rbind(dummy, ind_bird)
     }
   }
   GPS_data <- dummy
-  
 }
 
 ### Classify stopover sites
 ### Input = (subsampled )GPS coordinates, an epsilon value, and a minimal amount of points per cluster (cf dbscan)
 ### Output = A df with 3 added columns: Cluster, Cluster ID (unique per bird), and Migratory bout ID (unique per bird)
 dbcluster_label <- function(GPS_data, eps, amount){
-  
   #loop over birds, cluster stopover sites
   clustered_roosts <- NULL
   for (bird in unique(GPS_data$individual.local.identifier)) {
     ind_bird <- GPS_data %>% filter(individual.local.identifier == bird)
-    y=ind_bird$location.lat
-    x=ind_bird$location.long
-    points = data.frame(x, y)
+    y <- ind_bird$location.lat
+    x <- ind_bird$location.long
+    points <- data.frame(x, y)
     t <- dbscan(points, eps = eps, minPts = amount)
     t <- (t[["cluster"]])
     ind_bird$cluster <-  t
@@ -130,15 +124,7 @@ dbcluster_label <- function(GPS_data, eps, amount){
     
     
     dummy <- rbind(dummy, ind_bird)
-    
-    
-    
-    
-    
-    
-    
   }
-  
 }
 
 ### Subsample data to a certain resolution
@@ -165,9 +151,6 @@ subsample <- function(movebank_data, minutes){
   
   movebank_data <- setDT(movebank_data)[, .SD[.N], by = MESS::cumsumbinning(delta2, minutes - 1, cutwhenpassed = TRUE)]
  
-  
-  
-  
   
 }
 
@@ -228,5 +211,3 @@ step_length <- function(movebank_data){
   movebank_data <- bind_rows(movebank_data, .id = "column_label")
   
 }
-
-
