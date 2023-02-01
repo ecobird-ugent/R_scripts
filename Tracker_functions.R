@@ -97,6 +97,9 @@ remove_colony <- function(GPS_data){
 ### Input = (subsampled )GPS coordinates, an epsilon value, and a minimal amount of points per cluster (cf dbscan)
 ### Output = A df with 3 added columns: Cluster, Cluster ID (unique per bird), and Migratory bout ID (unique per bird)
 dbcluster_label <- function(GPS_data, eps, amount){
+  # remove dashes from colnames
+  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
+  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
   #loop over birds, cluster stopover sites
   clustered_roosts <- NULL
   for (bird in unique(GPS_data$individual.local.identifier)) {
@@ -141,6 +144,9 @@ subsample <- function(movebank_data, minutes){
   require(data.table)
   require(dplyr)
   require(MESS)
+  # remove dashes from colnames
+  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
+  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
   
   # calculate
   movebank_data <- movebank_data %>%
@@ -198,6 +204,9 @@ minimal_distance <- function(lon1, lat1, lon2, lat2){
 ### input: movebank data
 ### output: df with added column step_length
 step_length <- function(movebank_data){
+  # remove dashes from colnames
+  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
+  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
   # Function which calculates distance between fix and next fix
   FUN <- function(bird){
     p <- cbind(bird$location.long, bird$location.lat)
