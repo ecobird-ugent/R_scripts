@@ -1,23 +1,32 @@
+# merges GPS data and ODBA data to a single dataframe
+# takes 
+
 require(data.table)
 require(dplyr)
+
+
+source('https://raw.githubusercontent.com/cobe-lab/R_scripts/main/Tracker_functions.R')
+
 # get GPS + ODBA/ACC data
 GPS_data <- fread("~/Downloads/HG_JUVENILE.csv")
 ODBA_df <- fread("~/Downloads/ODBA_GPS.csv")
 
-# fix some column name issues
+GPS_data <- subsample(GPS_data, 360)
+
+# fix some column name issues for sqldf 
 setnames(ODBA_df, "Collecting time", "Collecting_time")
-colnames(ODBA_df) <- gsub("-", "_", colnames(ODBA_df))
-colnames(GPS_data) <- gsub("-", "_", colnames(GPS_data))
+colnames(GPS_data) <- gsub("\\.", "_", colnames(GPS_data))
 setnames(ODBA_df, "UUID", "ID")
 setnames(GPS_data, "tag_local_identifier", "ID")
 
 
 # match data based on ID and timestamp, only retain ODBA for GPS-fix if timedif <= 5 minutes
 # depending on the df size this might take a while to run
-out <- sqldf("select a.ID,
-              a.event_ID,
+
+
+out <- sqldf("select a.ID, 
               a.timestamp, 
-              b.Collecting_time [Collecting_time.y], 
+              b.Collecting_time  [Collecting_time.y], 
               min(abs(a.timestamp - b.Collecting_time)) seconds, 
               b.ODBA
   from GPS_data a
@@ -25,25 +34,6 @@ out <- sqldf("select a.ID,
                       abs(a.timestamp - b.Collecting_time) < 60 * 5
   group by a.rowid")[-4]
 
-# backtransform datetime to readable format
-out$Collecting_time.y <- as.POSIXct(out$Collecting_time.y, origin = "1970-01-01")
-
-#
-
-
-
-library(sqldf)
-
-out <- sqldf("select a.tag.local.identifier, 
-              a.timestamp, 
-              b.timestamp [Collecting_time.y], 
-              min(abs(a.timestamp - b.Collecting_time)) seconds, 
-              b.x1, 
-              b.x2
-  from GPS_data a
-  left join ODBA_df b on a.tag.local.identifier = b.tag.local.identifier and
-                      abs(a.timestamp - b.timestamp) < 60 * 5
-  group by a.rowid")[-4]
 out$timestamp.y <- as.POSIXct(out$timestamp.y, origin = "1970-01-01")
 
 # check
