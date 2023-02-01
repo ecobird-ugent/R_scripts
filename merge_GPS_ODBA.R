@@ -25,7 +25,7 @@ out <- sqldf("select a.ID,
                       abs(a.timestamp - b.Collecting_time) < 60 * 5
   group by a.rowid")[-4]
 
-# backtransform datetime to readeable format
+# backtransform datetime to readable format
 out$Collecting_time.y <- as.POSIXct(out$Collecting_time.y, origin = "1970-01-01")
 
 #
