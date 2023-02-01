@@ -136,6 +136,9 @@ dbcluster_label <- function(GPS_data, eps, amount){
 ### Input = A movebank df, the cutoff value for your minutes 
 ### Output = A subsampled dataframe where rows got removed until their cumulative time difference almost reaches the cutoff value (cutoff - 1min)
 subsample <- function(movebank_data, minutes){
+  # remove dashes from colnames
+  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
+  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
   
   # load and install all required packages
   if (!require("data.table")) install.packages("data.table")  
