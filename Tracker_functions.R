@@ -3,7 +3,7 @@
 # append metadata from movebank 
 # Input: Raw movebank meta and gps-data
 # Output: Df with matched columns from both df
-append_metadata   <- function(GPS.data,meta.data){
+append_metadata   <- function(GPS_data,meta_data){
   
   # load and install all required packages
   if (!require("data.table")) install.packages("data.table")  
@@ -11,23 +11,23 @@ append_metadata   <- function(GPS.data,meta.data){
   require(data.table)
   require(bit64)
   # remove dashes from colnames
-  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
-  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
+  colnames(GPS_data) <- gsub("-", ".", colnames(GPS_data))
+  colnames(meta_data) <- gsub("-", ".", colnames(meta_data))
   # convert input to data.table
-  GPS.data               <- data.table(GPS.data)
-  meta.data              <- data.table(meta.data)
+  GPS_data               <- data.table(GPS_data)
+  meta_data              <- data.table(meta_data)
   
   # add new.columns
-  GPS.data$species_name  <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.taxon"]
-  GPS.data$depl_comments <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deployment.comments"]
-  GPS.data$stage         <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.life.stage"]
-  GPS.data$weight        <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.mass"]
-  GPS.data$colour_ring   <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.ring.id"]
-  GPS.data$sex           <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"animal.sex"]
-  GPS.data$tag_location  <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deployment.comments"]
-  GPS.data$deploy_end    <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.off.date"]
-  GPS.data$deploy_start  <- meta.data[match(GPS.data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.on.date"]
-  return(GPS.data)
+  GPS_data$species_name  <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"animal.taxon"]
+  GPS_data$depl_comments <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"deployment.comments"]
+  GPS_data$stage         <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"animal.life.stage"]
+  GPS_data$weight        <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"animal.mass"]
+  GPS_data$colour_ring   <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"animal.ring.id"]
+  GPS_data$sex           <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"animal.sex"]
+  GPS_data$tag_location  <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"deployment.comments"]
+  GPS_data$deploy_end    <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.off.date"]
+  GPS_data$deploy_start  <- meta.data[match(GPS_data$`tag.local.identifier`,meta.data$`tag.id`),"deploy.on.date"]
+  return(GPS_data)
 }
 
 # create polygon with certain radius (m)
@@ -79,6 +79,9 @@ polygon_check <- function(lon, lat, polygon){
 # removes all points until bird left colony for the last time, this function can only be used after using the polygon_check function!
 # ! still need to adapt function to work per cycle instead of per bird!
 remove_colony <- function(GPS_data){
+  # remove dashes from colnames
+  colnames(GPS_data) <- gsub("-", ".", colnames(GPS_data))
+
   warning("READ-FIRST: Use function after using the polygon_check function or make sure the df contains an In_poly boolean column! Still need to adapt function to work per cycle instead of per bird!")
   dummy <- NULL
   for (bird in unique(GPS_data$individual.local.identifier)){ 
@@ -98,8 +101,8 @@ remove_colony <- function(GPS_data){
 ### Output = A df with 3 added columns: Cluster, Cluster ID (unique per bird), and Migratory bout ID (unique per bird)
 dbcluster_label <- function(GPS_data, eps, amount){
   # remove dashes from colnames
-  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
-  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
+  colnames(GPS_data) <- gsub("-", ".", colnames(GPS_data))
+
   #loop over birds, cluster stopover sites
   clustered_roosts <- NULL
   for (bird in unique(GPS_data$individual.local.identifier)) {
@@ -136,9 +139,7 @@ dbcluster_label <- function(GPS_data, eps, amount){
 ### Input = A movebank df, the cutoff value for your minutes 
 ### Output = A subsampled dataframe where rows got removed until their cumulative time difference almost reaches the cutoff value (cutoff - 1min)
 subsample <- function(movebank_data, minutes){
-  # remove dashes from colnames
-  colnames(movebank_data) <- gsub("-", ".", colnames(GPS.data))
-  
+
   # load and install all required packages
   if (!require("data.table")) install.packages("data.table")  
   if (!require("dplyr")) install.packages("dplyr") 
@@ -146,9 +147,9 @@ subsample <- function(movebank_data, minutes){
   require(data.table)
   require(dplyr)
   require(MESS)
+  
   # remove dashes from colnames
-  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
-  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
+  colnames(movebank_data) <- gsub("-", ".", colnames(movebank_data))
   
   # calculate
   movebank_data <- movebank_data %>%
@@ -207,8 +208,7 @@ minimal_distance <- function(lon1, lat1, lon2, lat2){
 ### output: df with added column step_length
 step_length <- function(movebank_data){
   # remove dashes from colnames
-  colnames(GPS.data) <- gsub("-", ".", colnames(GPS.data))
-  colnames(meta.data) <- gsub("-", ".", colnames(meta.data))
+  colnames(movebank_data) <- gsub("-", ".", colnames(movebank_data))
   # Function which calculates distance between fix and next fix
   FUN <- function(bird){
     p <- cbind(bird$location.long, bird$location.lat)
