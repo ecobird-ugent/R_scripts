@@ -20,7 +20,7 @@ read_database(path_to_db)
 
 
 # remove undeployed tags
-animals <- subset(animals,!is.na(project))
+animals <- subset(animals, !is.na(project))
 
 
 # movebank metadata to proper columns
@@ -28,16 +28,22 @@ animals <-
   separate(
     data = animals,
     col = track_session_remarks,
-    into = c("wing_length_rel", "head_length_rel", "tarsus_length_rel", "death_info"),
+    into = c(
+      "wing_length_rel",
+      "head_length_rel",
+      "tarsus_length_rel",
+      "death_info"
+    ),
     sep = "\\|"
   )
 animals$wing_length_rel <- sub(".*:", "", animals$wing_length_rel)
-animals$tarsus_length_rel <- sub(".*:", "", animals$tarsus_length_rel)
+animals$tarsus_length_rel <-
+  sub(".*:", "", animals$tarsus_length_rel)
 animals$head_length_rel <- sub(".*:", "", animals$head_length_rel)
 
 # remove malfunctional tags
 animals <-
-  subset(animals,!grepl("malfunc", animals$death_info, fixed = TRUE))
+  subset(animals, !grepl("malfunc", animals$death_info, fixed = TRUE))
 
 # cause of death to proper format
 animals <- animals %>%
@@ -53,7 +59,7 @@ animals <- animals %>%
 
 # remove living birds
 animals_all <- animals
-animals <- subset(animals,!is.na(death_info_cleaned))
+animals <- subset(animals, !is.na(death_info_cleaned))
 
 
 # subset GPS-data to only dead birds
@@ -112,34 +118,43 @@ t <- chick_measurements %>%
   pivot_wider(names_from = moment, values_from = date) %>%
   select(-c(comment, red_blood, red_flush, initials))
 
-# only birds with data, merge all df
-m1_meas <- subset(t,!is.na(`2022_m1`)) %>%
-  select(c(chick_id, weight, head, tarsus_l1, `2022_m1`))
-m1_meas <- merge(x = m1_meas, y = chicks, by = "chick_id") %>%
+
+# only birds with data, merge with chicksdf
+m1_meas <- t %>%
+  filter(!is.na(`2022_m1`)) %>%
   rename("weight_m1" = "weight",
          "head_m1" = "head",
          "tarsus_m1" = "tarsus_l1") %>%
-  select(-c(enclosure, experiment, comments, red_diet,))
+  left_join(chicks, by = "chick_id") %>%
+  select(-c(enclosure, experiment, comments, red_diet))
 
-m1_meas <-
-  merge(x = m1_meas, y = egg_measurements, by = "egg_id") %>%
+
+# merge with egg measurements
+m1_meas <- m1_meas %>%
+  left_join(egg_measurements, by = "egg_id") %>%
   rename("date_egg_m" = "date")
 
-m1_meas$nest_id <-  substring(m1_meas$egg_id, 1, nchar(m1_meas$egg_id)-1)
+# extract nest_id and merge with nests and gpnests
 
-m1_meas <-
-  merge(x = m1_meas, y = nests, by = "nest_id")
-m1_meas <-  
-  merge(x = m1_meas, y = gp_nests, by = "gp_nest_id")
+m1_meas$nest_id <-
+  substring(m1_meas$egg_id, 1, nchar(m1_meas$egg_id) - 1)
+m1_meas <- m1_meas %>%
+  left_join(nests, by = "nest_id") %>%
+  left_join(gp_nests, by = "gp_nest_id")
 
+# merge with animals_all and extract egg_number
 
-animals_all <- merge(x = animals_all, y = m1_meas, by = "colour_ring")
-animals_all$egg_number <- stri_sub(animals_all$egg_id,-1)
+animals_all <- animals_all %>%
+  left_join(m1_meas, by = "colour_ring") %>%
+  mutate(egg_number = stri_sub(egg_id,-1))
 
+# merge with animals_gps and extract egg_number
 
-animals_gps <-
-  merge(x = animals_gps, y = m1_meas, by = "colour_ring")
-animals_gps$egg_number <- stri_sub(animals_gps$egg_id,-1)
+animals_gps <- animals_gps %>%
+  left_join(m1_meas, by = "colour_ring") %>%
+  mutate(egg_number = stri_sub(egg_id,-1))
 
 #purge environment, keep df of interest
-rm(list = setdiff(ls(), c("animals_all", "animals_gps", "GPS_death")))
+rm(list = setdiff(ls(), c(
+  "animals_all", "animals_gps", "GPS_death"
+)))
