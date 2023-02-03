@@ -10,6 +10,9 @@ source("https://raw.githubusercontent.com/ReinoudAllaert/Gull_tracking/main/Trac
 # dummy GPS-data
 GPS_data <- read.csv("~Path_to_movebank_data")
 
+colnames(GPS_data) <- gsub("-", ".", colnames(GPS_data))
+colnames(GPS_data) <- gsub("_", ".", colnames(GPS_data))
+
 # add bird_day
 GPS_data$date <- as.Date(GPS_data$timestamp)
 GPS_data$bird_day <- paste0(GPS_data$date, "_", GPS_data$individual.local.identifier)
