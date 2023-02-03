@@ -11,7 +11,7 @@ read_database <- function(path_to_db){
   
   
   # READ FROM SQLITE
-  db <- dbConnect(RSQLite::SQLite(), "/Users/reinoud/Downloads/gulls 3.sqlite")
+  db <- dbConnect(RSQLite::SQLite(), path_to_db)
   sqlite_tables <- as_tibble(dbListTables(db)) %>% set_names("table_name")
   for (i in 1:nrow(sqlite_tables)){
     assign(sqlite_tables$table_name[i], as_tibble(dbReadTable(db, sqlite_tables$table_name[i])), envir=.GlobalEnv)
@@ -20,8 +20,6 @@ read_database <- function(path_to_db){
   }
   dbDisconnect(db)
 }
-
-
 
 
 
