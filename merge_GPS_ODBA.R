@@ -12,7 +12,9 @@ source('https://raw.githubusercontent.com/cobe-lab/R_scripts/main/Tracker_functi
 GPS_data <- fread("~/Downloads/HG_JUVENILE.csv")
 ODBA_df <- fread("~/Downloads/ODBA_GPS.csv")
 
-GPS_data <- subsample(GPS_data, 0.001)
+# does not change data, but fixes colname issues
+GPS_data <- subsample(GPS_data, 0.0001)
+
 
 # fix some column name issues for sqldf 
 setnames(ODBA_df, "Collecting time", "Collecting_time")
@@ -21,7 +23,7 @@ setnames(ODBA_df, "UUID", "ID")
 setnames(GPS_data, "tag_local_identifier", "ID")
 
 
-# match data based on ID and timestamp, only retain ODBA for GPS-fix if timedif <= 5 minutes
+# match data based on ID and timestamp, only retain ODBA for GPS-fix if timedif <= 10 minutes
 # depending on the df size this might take a while to run
 out <- sqldf("select a.ID, 
               a.timestamp,
@@ -38,13 +40,4 @@ out$Collecting_time.y <- as.POSIXct(out$Collecting_time.y, origin = "1970-01-01"
 out <- merge(x = GPS_data, y = out, by = "timestamp", all.x = TRUE)
 out<-subset(out, ID.y == ID.x)
 out$diff <- out$timestamp-out$Collecting_time.y
-(colMeans(is.na(out)))*100
-
-
-
-
-
-
-
-
 
