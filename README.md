@@ -14,10 +14,6 @@ Source the raw file to use the functions in R
 
 ```source(https://raw.githubusercontent.com/cobe-lab/R_scripts/main/tracker_functions.R)```
 
-### voc_gulls.sqlite
-
-Database of gull data collected in the lab. 
-
 ### read_gull_database_function
 
 Function to read gull data in R 
