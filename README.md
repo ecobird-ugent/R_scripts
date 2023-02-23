@@ -1,5 +1,5 @@
 # Gull tracking
-R-scrips that might be interesting for people working with (gull) movebank data
+R-scripts that might be interesting for people working with (gull) movebank data
 
 Raw data can be imported in R directly using the move package, or downloaded from the site.
 For example:
