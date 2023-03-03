@@ -1,15 +1,15 @@
+# load and install all required packages
+if (!require("RODBC")) install.packages("RODBC")  
+if (!require("DBI")) install.packages("DBI") 
+if (!require("tidyverse")) install.packages("tidyverse") 
+
+require(data.table)
+require(bit64)
+require(tidyverse)
+
+
 #reads the gull sqlite database
 read_database <- function(path_to_db){
-  # load and install all required packages
-  if (!require("RODBC")) install.packages("RODBC")  
-  if (!require("DBI")) install.packages("DBI") 
-  if (!require("tidyverse")) install.packages("tidyverse") 
-  
-  require(data.table)
-  require(bit64)
-  require(tidyverse)
-  
-  
   # READ FROM SQLITE
   db <- dbConnect(RSQLite::SQLite(), path_to_db)
   sqlite_tables <- as_tibble(dbListTables(db)) %>% set_names("table_name")
