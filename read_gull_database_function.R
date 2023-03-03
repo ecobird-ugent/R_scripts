@@ -3,8 +3,8 @@ if (!require("RODBC")) install.packages("RODBC")
 if (!require("DBI")) install.packages("DBI") 
 if (!require("tidyverse")) install.packages("tidyverse") 
 
-require(data.table)
-require(bit64)
+require(RODBC)
+require(DBI)
 require(tidyverse)
 
 
