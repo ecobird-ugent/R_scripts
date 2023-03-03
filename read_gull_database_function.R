@@ -2,10 +2,12 @@
 if (!require("RODBC")) install.packages("RODBC")  
 if (!require("DBI")) install.packages("DBI") 
 if (!require("tidyverse")) install.packages("tidyverse") 
+if (!require("RSQLite")) install.packages("RSQLite") 
 
 require(RODBC)
 require(DBI)
 require(tidyverse)
+require(RSQLite)
 
 
 #reads the gull sqlite database
