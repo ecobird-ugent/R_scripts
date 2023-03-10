@@ -21,10 +21,12 @@ unique colour combinations, an error will be thrown.
 # Two examples:
 # Generate 50 unique colour combinations with 3 colours in the left leg and 2 colours in the right leg,
 # split into 3 groups.
-generate_colour_combinations(colours = c("R", "B", "G", "Y", "P"), num_combinations = 50, rings_left = 3, rings_right = 2, num_groups = 3)
+generate_colour_combinations(
+  colours = c("R", "B", "G", "Y", "P"), num_combinations = 50, rings_left = 3, rings_right = 2, num_groups = 3)
 
 # Generate 100 unique colour combinations with 2 colours in each leg, split into 2 groups.
-generate_colour_combinations(colours = c("R", "B", "G", "Y", "P"), num_combinations = 100, rings_left = 2, rings_right = 2, num_groups = 2)
+generate_colour_combinations(
+  colours = c("R", "B", "G", "Y", "P"), num_combinations = 100, rings_left = 2, rings_right = 2, num_groups = 2)
 
 ```
 
