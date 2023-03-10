@@ -1,7 +1,7 @@
 # Reinoud Allaert - 10/03/2023
 # see colour_combination_generator.md on GIthub for explanation
 
-generate_color_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1) {
+generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1) {
   
   # Check inputs
   if (!is.vector(colours) || length(colours) < 2) {
