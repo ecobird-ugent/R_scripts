@@ -7,8 +7,8 @@ and a set of colours. The list is split into three groups, with each group conta
 Parameters:
 -  `colours` (required): A character vector of colours to generate combinations from.
 -  `num_combinations` (required): An integer specifying the number of unique colour combinations to generate.
-- `left_leg` (required): An integer specifying the number of colours in the left leg of the combination.
-- `right_leg` (required): An integer specifying the number of colours in the right leg of the combination.
+- `rings_left` (required): An integer specifying the number of colours in the left leg of the combination.
+- `rings_right` (required): An integer specifying the number of colours in the right leg of the combination.
 - `num_groups ` (optional): An integer specifying the number of groups to split the combinations into. Default is 1.
 
 Output:
@@ -21,10 +21,10 @@ unique colour combinations, an error will be thrown.
 # Two examples:
 # Generate 50 unique colour combinations with 3 colours in the left leg and 2 colours in the right leg,
 # split into 3 groups.
-generate_colour_combinations(colours = c("R", "B", "G", "Y", "P"), num_combinations = 50, left_leg = 3, right_leg = 2, num_groups = 3)
+generate_colour_combinations(colours = c("R", "B", "G", "Y", "P"), num_combinations = 50, rings_left = 3, rings_right = 2, num_groups = 3)
 
 # Generate 100 unique colour combinations with 2 colours in each leg, split into 2 groups.
-generate_colour_combinations(colours = c("R", "B", "G", "Y", "P"), num_combinations = 100, left_leg = 2, right_leg = 2, num_groups = 2)
+generate_colour_combinations(colours = c("R", "B", "G", "Y", "P"), num_combinations = 100, rings_left = 2, rings_right = 2, num_groups = 2)
 
 ```
 
