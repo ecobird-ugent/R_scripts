@@ -1,5 +1,5 @@
 # Reinoud Allaert - 10/03/2023
-# see colour_combination_generator.md on GIthub for explanation
+# see colour_combination_generator.md on Github for explanation
 
 generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1) {
   
@@ -68,6 +68,7 @@ generate_colour_combinations <- function(colours, num_combinations, rings_left, 
   # Determine the number of combinations per group
   if (num_groups == 1) {
     num_per_group <- num_combinations
+    remainder <- 0
   } else {
     num_per_group <- floor(num_combinations/num_groups)
     remainder <- num_combinations - num_groups * num_per_group
