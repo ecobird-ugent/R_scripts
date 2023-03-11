@@ -21,6 +21,7 @@ unique colour combinations, an error will be thrown.
 # Two examples:
 # Generate 50 unique colour combinations with 3 colours in the left leg and 2 colours in the right leg,
 # split into 3 groups.
+source("https://raw.githubusercontent.com/cobe-lab/R_scripts/main/colour_combination_generator.R")
 generate_colour_combinations(
   colours = c("R", "B", "G", "Y", "P"), num_combinations = 50, rings_left = 3, rings_right = 2, num_groups = 3)
 
