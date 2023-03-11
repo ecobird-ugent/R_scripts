@@ -2,7 +2,8 @@
 # see colour_combination_generator.md on Github for explanation
 
 generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1) {
-  
+
+
   # Check inputs
   if (!is.vector(colours) || length(colours) < 2) {
     stop("Error: 'colors' must be a vector of at least two colors.")
@@ -53,7 +54,7 @@ generate_colour_combinations <- function(colours, num_combinations, rings_left, 
   # Randomise order of ring combinations
   ShuffledUniqueColour <- L_R[sample(nrow(L_R)), ]
   
-  combinations <- ShuffledUniqueColour[sample(nrow(ShuffledUniqueColour), num_combinations), ]
+  combinations <- ShuffledUniqueColour
   
   # Check if the number of requested combinations is greater than the number of unique combinations
   if (num_combinations > nrow(L_R)) {
