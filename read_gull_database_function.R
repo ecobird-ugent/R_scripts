@@ -18,11 +18,10 @@ read_database <- function(path_to_db){
   for (i in 1:nrow(sqlite_tables)){
     assign(sqlite_tables$table_name[i], as_tibble(dbReadTable(db, sqlite_tables$table_name[i])), envir=.GlobalEnv)
     assign(sqlite_tables$table_name[i], get(sqlite_tables$table_name[i]) %>%
-             mutate_at(vars(starts_with("date")), funs(as.Date(as.POSIXct(., origin="1970-01-01")))), envir=.GlobalEnv)
+             mutate_at(vars(starts_with("date")), list(~as.Date(as.POSIXct(., origin="1970-01-01")))), envir=.GlobalEnv)
   }
   dbDisconnect(db)
 }
-
 
 
 
