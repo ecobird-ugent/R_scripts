@@ -1,7 +1,7 @@
 # Reinoud Allaert - 10/03/2023
 # see colour_combination_generator.md on Github for explanation
 
-generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1, set_seed = NULL) {
+generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1, set_seed = sample(1:100000, 1)) {
   
   # Install dependencies
   if (!require("dplyr")) install.packages("dplyr")  
@@ -33,6 +33,9 @@ generate_colour_combinations <- function(colours, num_combinations, rings_left, 
   }
   if (!is.numeric(num_groups) || num_groups < 1) {
     stop("Error: 'num_groups' must be a positive integer.")
+  }
+  if (!is.numeric(set_seed) || num_groups < 1) {
+    stop("Error: 'set_seed' must be a positive integer.")
   }
   
   # Set seed if seed was defined

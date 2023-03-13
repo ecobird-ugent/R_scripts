@@ -7,10 +7,11 @@ and a set of colours. The list is split into three groups, with each group conta
 Parameters:
 -  `colours` (required): A character vector of colours to generate combinations from.
 -  `num_combinations` (required): An integer specifying the number of unique colour combinations to generate.
-- `rings_left` (required): An integer specifying the number of colours in the left leg of the combination.
-- `rings_right` (required): An integer specifying the number of colours in the right leg of the combination.
-- `num_groups ` (optional): An integer specifying the number of groups to split the combinations into. Default is 1.
-
+- `rings_left` (required): A positive integer specifying the number of colours in the left leg of the combination.
+- `rings_right` (required): A positive integer specifying the number of colours in the right leg of the combination.
+- `num_groups ` (optional): A positive integer specifying the number of groups to split the combinations into. Default is 1.
+ `set_seed ` (optional): A positive integer specifying the seed, makes the function reproducible. Default is a random number.
+ 
 Output:
 The function returns a list of data frames containing unique colour combinations, split into the specified number of groups. 
 Each data frame has two columns:  `ring_combination which` represents the combination of colours for both legs, and  `group` which 
