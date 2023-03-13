@@ -1,8 +1,15 @@
 # Reinoud Allaert - 10/03/2023
 # see colour_combination_generator.md on Github for explanation
 
-generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1) {
-
+generate_colour_combinations <- function(colours, num_combinations, rings_left, rings_right, num_groups = 1, set_seed = NULL) {
+  
+  # Install dependencies
+  if (!require("dplyr")) install.packages("dplyr")  
+  if (!require("stringr")) install.packages("stringr")
+  if (!require("tidyr")) install.packages("tidyr")
+    require(dplyr)
+    require(stringr)
+    require(tidyr)
 
   # Check inputs
   if (!is.vector(colours) || length(colours) < 2) {
@@ -24,7 +31,12 @@ generate_colour_combinations <- function(colours, num_combinations, rings_left, 
   if (!is.numeric(num_groups) || num_groups < 1) {
     stop("Error: 'num_groups' must be a positive integer.")
   }
+  if (!is.numeric(num_groups) || num_groups < 1) {
+    stop("Error: 'num_groups' must be a positive integer.")
+  }
   
+  # Set seed if seed was defined
+  set.seed(set_seed)
   
   # Define function to sort characters in a string
   sort_string <- function(s) {
