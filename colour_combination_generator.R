@@ -5,9 +5,11 @@ generate_colour_combinations <- function(colours, num_combinations, rings_left, 
   
   # Install dependencies
   if (!require("dplyr")) install.packages("dplyr")  
+  if (!require("stringdist")) install.packages("stringdist")
   if (!require("stringr")) install.packages("stringr")
   if (!require("tidyr")) install.packages("tidyr")
     require(dplyr)
+    require(stringdist)
     require(stringr)
     require(tidyr)
 
