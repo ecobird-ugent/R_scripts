@@ -123,8 +123,15 @@ generate_colour_combinations <- function(colours, num_combinations, rings_left, 
   # Combine all groups into a single data frame
   result <- do.call(rbind, groups)
   
+  
   # Return the data frame
-  return(result)
+  if (num_groups == 1) {
+    return(result)
+  } else {
+    result <- result[-1,]
+    return(result)
+  }
+  
 }
 
                                             
