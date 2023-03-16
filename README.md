@@ -12,13 +12,13 @@ How to use:
 
 Source the raw file to use the functions in R
 
-```source(https://raw.githubusercontent.com/cobe-lab/R_scripts/main/tracker_functions.R)```
+```source("https://raw.githubusercontent.com/cobe-lab/R_scripts/main/tracker_functions.R")```
 
 ### read_gull_database_function
 
 Function to read gull data in R 
 
-```source(https://raw.githubusercontent.com/cobe-lab/R_scripts/main/read_gull_database_function.R)```
+```source("https://raw.githubusercontent.com/cobe-lab/R_scripts/main/read_gull_database_function.R")```
 
 ### minimal_distance
 How to use:
