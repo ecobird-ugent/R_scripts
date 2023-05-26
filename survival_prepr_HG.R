@@ -1,5 +1,6 @@
 library(dplyr)
 library(stringr)
+library(googlesheets4)
 
 tag_metadata <- read_sheet('https://docs.google.com/spreadsheets/d/1NZnLRdTBtqpktkQ3bjbwUPja7BXfkYZPvGqJplTR-Fs/edit#gid=0')
 tag_metadata <- subset(tag_metadata, sync == 'ok')
@@ -31,3 +32,11 @@ tag_metadata$animal_weight <- as.numeric(tag_metadata$animal_weight)
 tag_metadata$wing_length <- as.numeric(tag_metadata$wing_length)
 tag_metadata$head_length <- as.numeric(tag_metadata$head_length)
 tag_metadata$tarsus_length <- as.numeric(tag_metadata$tarsus_length)
+
+
+# Group by species
+tag_metadata <- tag_metadata %>%
+  mutate(wing_sq = wing_length^2,
+         lm_fit = list(lm(animal_weight ~ wing_length)),
+         residual = animal_weight - predict(lm_fit[[1]], newdata = data.frame(wing_length = wing_length)))%>%
+  dplyr::select(-lm_fit)
