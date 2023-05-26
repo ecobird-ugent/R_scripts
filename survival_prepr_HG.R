@@ -37,6 +37,6 @@ tag_metadata$tarsus_length <- as.numeric(tag_metadata$tarsus_length)
 # Group by species
 tag_metadata <- tag_metadata %>%
   mutate(wing_sq = wing_length^2,
-         lm_fit = list(lm(animal_weight ~ wing_length)),
+         lm_fit = list(lm(animal_weight ~ wing_sq)),
          residual = animal_weight - predict(lm_fit[[1]], newdata = data.frame(wing_length = wing_length)))%>%
   dplyr::select(-lm_fit)
