@@ -29,10 +29,16 @@ animal_meta <- animal_meta %>%
 GPS_data <- GPS_data %>%
   subset(individual.local.identifier %in% unique(animal_meta$metal_ring))
 
-# Convert timestamp to POSIXct format
-GPS_data$timestamp <- as.POSIXct(GPS_data$timestamp)
+# Find birds in animal_meta that have no GPS data in the last 7 days
+missing_birds <- anti_join(animal_meta, GPS_data, by = c("serial_number" = "tag.local.identifier"))
 
+# Extract tag_id for missing birds
+missing_tag_ids <- unique(missing_birds$serial_number)
 
+# Print the tag_id of missing birds
+print(missing_tag_ids)
+
+# check birds that show no movement
 # daily distance in km
 daily_distance <- GPS_data %>%
   group_by(individual.local.identifier, date = as.Date(timestamp)) %>%
