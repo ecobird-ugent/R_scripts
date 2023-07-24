@@ -245,26 +245,42 @@ minimal_distance <- function(lon1, lat1, lon2, lat2) {
 
 
 
-### Calculate step length between each GPS fix and the subsequent fix
+### Calculate haversine distance, timedif, and kmph
 ### input: movebank data
 ### output: df with added column step_length
+if (!requireNamespace("geosphere", quietly = TRUE)) {
+  install.packages("geosphere")
+}
+library(geosphere)
+
 step_length <- function(movebank_data) {
-  # remove dashes from colnames
-  colnames(movebank_data) <- gsub("-", ".", colnames(movebank_data))
-  # Function which calculates distance between fix and next fix
+  # Function to apply over list elements (=individuals)
   FUN <- function(bird) {
     p <- cbind(bird$location.long, bird$location.lat)
-    bird$step_length <-
-      c(NA, distHaversine(head(p,-1), tail(p,-1)))
+    bird$step_length <- c(NA, distHaversine(head(p,-1), tail(p,-1)))
+    bird$timedif <- c(NA, as.numeric(difftime(bird$timestamp[-1], bird$timestamp[-length(bird$timestamp)], units = "secs")))
+    bird$kmph <- c(NA, bird$step_length[-1] / bird$timedif[-1] * 3600 / 1000)  # Convert m to km, sec to hours
     return(bird)
   }
+  
+  # remove dashes from colnames
+  colnames(movebank_data) <- gsub("-", ".", colnames(movebank_data))
+  
   # split df per ID
-  movebank_data <-
-    split(movebank_data, movebank_data$individual.local.identifier)
-  # remove birds with 1 position
+  movebank_data <- split(movebank_data, movebank_data$individual.local.identifier)
+  
+  # remove individuals with 1 position (avoid calc errors)
   movebank_data <- movebank_data[sapply(movebank_data, nrow) > 1]
+  
   # apply over list elements, combine again
   movebank_data <- lapply(movebank_data, FUN)
-  movebank_data <- bind_rows(movebank_data, .id = "column_label")
-  
+  movebank_data <- do.call(rbind, movebank_data)
+  return(movebank_data)
 }
+
+# Calculate haversine distance, timedif, and kmph for consecutive GPS fixes per individuals
+result <- step_length(movebank_data)
+
+# Print the results
+print(result)
+
