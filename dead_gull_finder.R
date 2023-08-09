@@ -16,7 +16,7 @@ GPS_data <- getMovebankLocationData(study=2217728245 , sensorID="GPS",
 meta_data <- getMovebankReferenceTable(study=2217728245 ,  
                                     login=movebankLogin(username="Reinoud Allaert", password=key_get("movebank", "Reinoud Allaert")))
 
-# only meta of deployed tags
+# only meta of deployed tags with at least 10 GPS-positions
 meta_data <- meta_data %>% filter(!is.na(animal_timestamp_start) & number_of_location_events >= 10)
 
 # filter main gps data
@@ -27,7 +27,6 @@ GPS_data <- GPS_data %>%
 daily_distance <- GPS_data %>%
   group_by(individual.local.identifier, date = as.Date(timestamp)) %>%
   summarize(daily_distance = tryCatch(sum(distHaversine(cbind(location.long, location.lat))), error = function(e) NA)/1000)
-
 
 # calculate the average daily distance for each individual
 average_distance <- daily_distance %>%
@@ -43,7 +42,7 @@ alive_birds <- average_distance %>%
 
 # check if the average daily distance for each individual is > 1 km per day
 alive_birds <- alive_birds %>%
-  filter(avg_daily_distance > 1)
+  filter(avg_daily_distance > 0.3)
 
 # split the dataframe into two groups: alive birds and dead birds
 alive_individuals <- alive_birds$individual.local.identifier
@@ -103,5 +102,3 @@ leaflet() %>%
                    radius = 2,
                    label = lapply(lbls, HTML),
                    popup = lapply(lbls, HTML))
-
-
