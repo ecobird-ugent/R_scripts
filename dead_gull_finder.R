@@ -68,7 +68,7 @@ print(dead_df)
 # keep last 50 positions for every bird
 GPS_data <- GPS_data %>%
   group_by(individual.local.identifier) %>%
-  slice_tail(n = 10) %>%
+  slice_tail(n = 50) %>%
   ungroup()
 
 # filter to only problematic birds
