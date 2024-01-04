@@ -20,23 +20,23 @@ append_metadata   <- function(GPS_data, meta_data) {
   
   # add new.columns
   GPS_data$species_name  <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "animal.taxon"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "animal.taxon"]
   GPS_data$depl_comments <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "deployment.comments"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "deployment.comments"]
   GPS_data$stage         <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "animal.life.stage"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "animal.life.stage"]
   GPS_data$weight        <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "animal.mass"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "animal.mass"]
   GPS_data$colour_ring   <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "animal.ring.id"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "animal.ring.id"]
   GPS_data$sex           <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "animal.sex"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "animal.sex"]
   GPS_data$tag_location  <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "deployment.comments"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "deployment.comments"]
   GPS_data$deploy_end    <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "deploy.off.date"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "deploy.off.date"]
   GPS_data$deploy_start  <-
-    meta.data[match(GPS_data$`tag.local.identifier`, meta.data$`tag.id`), "deploy.on.date"]
+    meta_data[match(GPS_data$`tag.local.identifier`, meta_data$`tag.id`), "deploy.on.date"]
   return(GPS_data)
 }
 
