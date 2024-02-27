@@ -1,13 +1,19 @@
-# load and install all required packages
-if (!require("RODBC")) install.packages("RODBC")  
-if (!require("DBI")) install.packages("DBI") 
-if (!require("tidyverse")) install.packages("tidyverse") 
-if (!require("RSQLite")) install.packages("RSQLite") 
+#### 1. Load packages ####
+# Load required packages
+if (!requireNamespace("groundhog", quietly = TRUE)) {
+  install.packages("groundhog")
+}
+library(groundhog)
 
-require(RODBC)
-require(DBI)
-require(tidyverse)
-require(RSQLite)
+# Date for the package versions you want to use
+date_for_packages <- "2023-08-30"
+
+# Specify required packages and load them with groundhog
+packages <- c("RODBC", "DBI", "tidyverse", "RSQLite")
+
+sapply(packages, function(pkg) {
+  groundhog.library(pkg, date = date_for_packages)
+})
 
 
 #reads the gull sqlite database
