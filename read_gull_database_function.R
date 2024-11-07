@@ -18,7 +18,7 @@ if (!requireNamespace("groundhog", quietly = TRUE)) {
 library(groundhog)
 
 # Date for the package versions you want to use
-date_for_packages <- "2023-08-30"
+date_for_packages <- "2024-08-30"
 
 # Specify required packages and load them with groundhog
 packages <- c("RODBC", "DBI", "tidyverse", "RSQLite")
